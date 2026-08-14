@@ -1,0 +1,24 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: claritas-mongo
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - claritas-mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express:1
+    container_name: claritas-mongo-express
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_BASICAUTH: "false"
+
+volumes:
+  claritas-mongo-data:
