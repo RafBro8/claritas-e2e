@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      Applies the saved theme before anything paints, so there's no flash of
+      the wrong theme while React mounts and ThemeContext runs. Unlike
+      Provisio, this defaults to dark when nothing is stored yet (not the OS
+      preference) — Claritas is an internal dev-tool style app where dark is
+      the deliberate default, with a manual override. Kept in sync with
+      client/src/context/ThemeContext.tsx's logic.
+    -->
+    <script>
+      (function () {
+        var stored = localStorage.getItem("claritas-theme");
+        if (stored !== "light") {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claritas E2E</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

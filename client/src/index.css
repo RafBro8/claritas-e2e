@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (driven by ThemeToggle), not the OS media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  margin: 0;
+  color-scheme: light dark;
+}
