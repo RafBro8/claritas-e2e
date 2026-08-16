@@ -1,5 +1,6 @@
 import { API_ORIGIN } from "../../api/client";
 import { StatusBadge } from "../StatusBadge";
+import { FailureBadge } from "../FailureBadge";
 import { formatDuration, formatRelativeOrDate } from "../../lib/format";
 import type { RunRecord } from "../../types";
 
@@ -43,7 +44,11 @@ export function RunsTable({ runs }: Props) {
               className={`border-b border-slate-800/60 last:border-b-0 ${index % 2 === 1 ? "bg-slate-900/40" : ""}`}
             >
               <td className="px-4 py-2.5">
-                <StatusBadge status={run.status} />
+                {run.status === "failed" && run.failureAnalysis ? (
+                  <FailureBadge analysis={run.failureAnalysis} />
+                ) : (
+                  <StatusBadge status={run.status} />
+                )}
               </td>
               <td className="px-4 py-2.5 text-slate-300" title={run.specIds.join(", ")}>
                 {specsLabel(run.specIds)}

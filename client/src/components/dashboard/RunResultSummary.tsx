@@ -1,5 +1,6 @@
 import { API_ORIGIN } from "../../api/client";
 import { StatusBadge } from "../StatusBadge";
+import { FailureBadge } from "../FailureBadge";
 import { formatDuration } from "../../lib/format";
 import type { RunCompletedEvent } from "../../types";
 
@@ -11,6 +12,7 @@ export function RunResultSummary({ result }: Props) {
   return (
     <div className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm">
       <StatusBadge status={result.status} />
+      {result.status === "failed" && result.failureAnalysis && <FailureBadge analysis={result.failureAnalysis} />}
       <span className="text-slate-400">
         {result.counts.passed} passed · {result.counts.failed} failed · {result.counts.skipped} skipped
         {result.counts.flaky > 0 ? ` · ${result.counts.flaky} flaky` : ""}
