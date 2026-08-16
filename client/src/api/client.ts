@@ -1,4 +1,7 @@
 const API_BASE_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost:4001/api";
+// Origin only (no /api suffix), for building plain <a href> links to
+// statically-served assets like archived reports, outside of apiRequest.
+export const API_ORIGIN: string = API_BASE_URL.replace(/\/api\/?$/, "");
 
 export class ApiError extends Error {
   status: number;
