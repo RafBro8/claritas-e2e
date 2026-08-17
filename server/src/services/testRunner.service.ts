@@ -1,14 +1,17 @@
 import { spawn, exec, type ChildProcess } from "child_process";
-import { mkdir, readFile } from "fs/promises";
+import { mkdir } from "fs/promises";
 import path from "path";
 import type { Server } from "socket.io";
 import { env } from "../config/env";
 import { REPORTS_DIR } from "../config/paths";
 import { discoverSpecs } from "./specDiscovery.service";
-import { checkEnvironmentHealth } from "./envHealth.service";
+import { checkEnvironmentHealth, healthUrlFor } from "./envHealth.service";
 import { classifyFailure } from "./failureClassifier.service";
 import { archiveReport } from "./reportArchive.service";
 import { createRun, completeRun } from "./runRepository.service";
+import { generateRunId } from "../lib/runId";
+import { buildChildEnv } from "../lib/childEnv";
+import { parseJsonReport } from "../lib/playwrightReport";
 import type {
   Environment,
   FailureAnalysis,
@@ -34,34 +37,6 @@ function roomFor(runId: string): string {
   return `run:${runId}`;
 }
 
-function generateRunId(): string {
-  const hash = Math.random().toString(16).slice(2, 6);
-  return `run_${Date.now()}_${hash}`;
-}
-
-// This server's own operational env vars (PORT, MONGODB_URI, CLIENT_ORIGIN,
-// ...) use the exact same names Provisio's server/client expect for
-// themselves. Spreading process.env into the spawned Playwright process
-// unchanged leaks this server's PORT into Provisio's local webServer, which
-// then tries to bind that same port — already held by this process — fails
-// silently, and Playwright times out waiting on the *real* port that never
-// came up. Stripping this server's own keys before spreading avoids that.
-const OWN_ENV_KEYS = [
-  "PORT",
-  "MONGODB_URI",
-  "CLIENT_ORIGIN",
-  "PROVISIO_E2E_PATH",
-  "PROVISIO_LOCAL_HEALTH_URL",
-  "PROVISIO_LIVE_HEALTH_URL",
-  "HEALTH_TIMEOUT_MS",
-];
-
-function buildChildEnv(overrides: Record<string, string>): NodeJS.ProcessEnv {
-  const base = { ...process.env };
-  for (const key of OWN_ENV_KEYS) delete base[key];
-  return { ...base, ...overrides };
-}
-
 // Killing a `shell: true` child only kills the shell wrapper, not the
 // Playwright/browser processes it launched underneath — the process tree
 // needs to go, not just the immediate child. Windows and POSIX need
@@ -76,53 +51,6 @@ function killProcessTree(child: ChildProcess): void {
     } catch {
       child.kill("SIGTERM");
     }
-  }
-}
-
-interface PlaywrightJsonSpec {
-  file: string;
-  ok: boolean;
-}
-
-interface PlaywrightJsonSuite {
-  specs?: PlaywrightJsonSpec[];
-  suites?: PlaywrightJsonSuite[];
-}
-
-interface PlaywrightJsonReport {
-  stats: { expected: number; unexpected: number; skipped: number; flaky: number };
-  suites: PlaywrightJsonSuite[];
-}
-
-function collectFailedFiles(suites: PlaywrightJsonSuite[] | undefined, failed: Set<string>): void {
-  if (!suites) return;
-  for (const suite of suites) {
-    for (const spec of suite.specs ?? []) {
-      if (!spec.ok) failed.add(spec.file);
-    }
-    collectFailedFiles(suite.suites, failed);
-  }
-}
-
-async function parseJsonReport(filePath: string): Promise<{ counts: RunCounts; failedFiles: string[] } | null> {
-  try {
-    const raw = await readFile(filePath, "utf-8");
-    const report: PlaywrightJsonReport = JSON.parse(raw);
-    const failed = new Set<string>();
-    collectFailedFiles(report.suites, failed);
-    return {
-      counts: {
-        passed: report.stats.expected,
-        failed: report.stats.unexpected,
-        skipped: report.stats.skipped,
-        flaky: report.stats.flaky,
-      },
-      failedFiles: [...failed],
-    };
-  } catch {
-    // Missing/unparseable JSON (e.g. the process crashed before any reporter
-    // could write it) — the caller falls back to exit-code-only status.
-    return null;
   }
 }
 
@@ -152,7 +80,7 @@ export async function startRun(config: StartRunConfig, io: Server): Promise<{ ru
 
   // Runs concurrently with the actual test run, not before it — awaited
   // only once the run finishes, so it never adds to the run's duration.
-  const healthPromise = checkEnvironmentHealth(config.environment);
+  const healthPromise = checkEnvironmentHealth(healthUrlFor(config.environment));
 
   const specs = await discoverSpecs();
   const specFileNames = config.specIds
