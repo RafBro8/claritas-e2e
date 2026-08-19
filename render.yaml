@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: claritas-e2e-api
+    runtime: node
+    plan: free
+    rootDir: server
+    # --include=dev: same reasoning as Provisio's render.yaml — NODE_ENV=production
+    # (set below) makes plain `npm ci` skip devDependencies, but the build needs
+    # typescript to run `tsc`. Also installs and builds the bundled e2e suite's
+    # own deps, and downloads a real Chromium (--with-deps pulls its OS-level
+    # libraries too) since this backend actually spawns Playwright at runtime,
+    # not just serves an API.
+    buildCommand: >
+      npm ci --include=dev && npm run build &&
+      cd e2e-suite && npm ci && npx playwright install --with-deps chromium
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # The deployed frontend's origin — drives CORS for both the REST API
+      # and the Socket.io handshake. Best-guess value; Vercel may assign a
+      # different one if "claritas-e2e" collides globally (as happened with
+      # Provisio), in which case this gets corrected and redeployed the same
+      # way that did.
+      - key: CLIENT_ORIGIN
+        value: https://claritas-e2e.vercel.app
+      # Render checks out the repo to /opt/render/project/src, and rootDir
+      # above makes that .../src/server for build/start — so the bundled
+      # suite committed at server/e2e-suite lands here at runtime.
+      - key: PROVISIO_E2E_PATH
+        value: /opt/render/project/src/server/e2e-suite
+      # No local Provisio instance is reachable from this container, so
+      # there's nothing meaningful to health-check for the "Local" target —
+      # left blank on purpose, which envHealth.service.ts treats as "skip
+      # this check" (ok: null) rather than a failure.
+      - key: PROVISIO_LOCAL_HEALTH_URL
+        value: ""
+      - key: PROVISIO_LIVE_HEALTH_URL
+        value: https://provisio-api.onrender.com/api/health
+      # Secret — intentionally not set here. Render prompts for this in the
+      # dashboard when the blueprint is deployed, so it's never committed.
+      - key: MONGODB_URI
+        sync: false
