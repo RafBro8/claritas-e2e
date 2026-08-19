@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  server-tests:
+    name: Server (typecheck + tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: server
+        run: npm run typecheck
+
+      # No .env setup needed here, unlike Provisio's server: vitest.config.ts
+      # sets every required env var (MONGODB_URI, CLIENT_ORIGIN,
+      # PROVISIO_E2E_PATH) directly, and the target suite tests run against
+      # is a small fixture checked into this repo — there's no real Provisio
+      # checkout to depend on in CI.
+      - name: Run tests
+        working-directory: server
+        run: npm test
+
+  client-tests:
+    name: Client (lint + typecheck + tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Lint
+        working-directory: client
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: client
+        run: npx tsc -b
+
+      - name: Run tests
+        working-directory: client
+        run: npm test
