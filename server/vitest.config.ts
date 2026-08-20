@@ -21,13 +21,17 @@ export default defineConfig({
       PROVISIO_E2E_PATH: path.resolve(__dirname, "src/test/fixtures/e2e-suite"),
     },
     setupFiles: ["./src/test/setup.ts"],
-    // Fixture spec files under test/fixtures end in .spec.ts (so
-    // specDiscovery's real filter logic picks them up) — which also matches
-    // Vitest's own default test-file pattern. Excluded explicitly so Vitest
-    // doesn't try to collect and run them as if they were real test files
-    // (they use Playwright's test() API, not Vitest's, and aren't meant to
-    // ever execute).
-    exclude: [...configDefaults.exclude, "src/test/fixtures/**"],
+    // Both the unit-test fixture suite and the real bundled suite
+    // (server/e2e-suite, added for the Render deployment) end in .spec.ts —
+    // which also matches Vitest's own default test-file pattern. Excluded
+    // explicitly so Vitest doesn't try to collect and run them as if they
+    // were real test files (they use Playwright's test() API, not Vitest's,
+    // and aren't meant to ever execute here). This only surfaced as a
+    // failure in CI, not locally: e2e-suite/node_modules happened to be
+    // installed locally already (from simulating the Render build), so
+    // @playwright/test resolved and masked the missing exclude — CI's
+    // server job never installs it, so the import failed outright there.
+    exclude: [...configDefaults.exclude, "src/test/fixtures/**", "e2e-suite/**"],
     testTimeout: 20000,
     hookTimeout: 30000,
   },
