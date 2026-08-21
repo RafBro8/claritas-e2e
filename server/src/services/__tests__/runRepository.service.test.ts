@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createRun, completeRun, findRun, listRecentRuns, getRunStats } from "../runRepository.service";
+import { createRun, completeRun, findRun, listRecentRuns, getRunStats, reconcileOrphanedRuns } from "../runRepository.service";
 
 describe("runRepository", () => {
   it("creates a run in the running state with a derived specCount", async () => {
@@ -121,5 +121,55 @@ describe("runRepository", () => {
 
     const stats = await getRunStats();
     expect(stats).toEqual({ total: 3, passed: 1, failed: 1, cancelled: 0 });
+  });
+
+  it("reconcileOrphanedRuns marks every still-running run as failed, and leaves finished runs alone", async () => {
+    await createRun({
+      runId: "run_orphan_1",
+      specIds: ["auth"],
+      environment: "local",
+      headless: true,
+      startedAt: new Date("2026-01-01T00:00:00.000Z"),
+    });
+    await createRun({
+      runId: "run_orphan_2",
+      specIds: ["auth"],
+      environment: "live",
+      headless: true,
+      startedAt: new Date("2026-01-01T00:00:00.000Z"),
+    });
+    await createRun({
+      runId: "run_finished",
+      specIds: ["auth"],
+      environment: "local",
+      headless: true,
+      startedAt: new Date("2026-01-01T00:00:00.000Z"),
+    });
+    await completeRun("run_finished", {
+      status: "passed",
+      completedAt: new Date(),
+      durationMs: 1000,
+      exitCode: 0,
+      counts: { passed: 1, failed: 0, skipped: 0, flaky: 0 },
+      hasReport: true,
+      failureAnalysis: undefined,
+      healthProbe: undefined,
+    });
+
+    const reconciledCount = await reconcileOrphanedRuns();
+    expect(reconciledCount).toBe(2);
+
+    const orphan1 = await findRun("run_orphan_1");
+    expect(orphan1?.status).toBe("failed");
+    expect(orphan1?.failureAnalysis?.category).toBe("environment");
+    expect(orphan1?.completedAt).toBeTruthy();
+
+    const orphan2 = await findRun("run_orphan_2");
+    expect(orphan2?.status).toBe("failed");
+
+    // A run that had already finished before reconciliation runs must be
+    // left completely untouched.
+    const finished = await findRun("run_finished");
+    expect(finished?.status).toBe("passed");
   });
 });

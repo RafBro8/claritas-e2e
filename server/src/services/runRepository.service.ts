@@ -61,6 +61,33 @@ export async function listRecentRuns(limit = 50): Promise<RunRecord[]> {
   return docs.map(toRunRecord);
 }
 
+/**
+ * Any run still marked "running" at startup was orphaned by the previous
+ * process dying mid-run (crash, redeploy, OOM kill) — the in-memory active-
+ * run registry that would normally track and complete it doesn't survive a
+ * restart, so without this it stays "running" in history forever. Marks
+ * every such run "failed" instead, which is honest: it did not, in fact,
+ * complete successfully. Returns how many were reconciled, for a log line.
+ */
+export async function reconcileOrphanedRuns(): Promise<number> {
+  const result = await Run.updateMany(
+    { status: "running" },
+    {
+      $set: {
+        status: "failed",
+        completedAt: new Date(),
+        failureAnalysis: {
+          category: "environment",
+          confidence: 1,
+          signals: ["The server restarted while this run was in progress and it never finished."],
+        },
+        hasReport: false,
+      },
+    },
+  );
+  return result.modifiedCount;
+}
+
 export async function getRunStats(): Promise<{ total: number; passed: number; failed: number; cancelled: number }> {
   const [total, passed, failed, cancelled] = await Promise.all([
     Run.countDocuments(),

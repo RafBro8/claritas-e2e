@@ -98,6 +98,14 @@ export async function startRun(config: StartRunConfig, io: Server): Promise<{ ru
   // PLAYWRIGHT_JSON_OUTPUT_NAME below rather than mixed into stdout, where
   // it would be unparseable alongside everything else sharing that stream.
   args.push("--reporter=list,json,html");
+  // Forced to 1 regardless of the bundled suite's own config (which
+  // defaults to 4 workers when CI isn't set, and Render doesn't set it):
+  // multiple concurrent Chromium instances comfortably exceed a free-tier
+  // Render instance's 512MB RAM, which OOM-kills the whole Node process —
+  // not just the test run, taking down the in-memory active-run registry
+  // with it and permanently orphaning that run's DB record in "running".
+  // One worker keeps peak memory to a single Chromium instance at a time.
+  args.push("--workers=1");
 
   const child = spawn("npx", args, {
     cwd: env.provisioE2ePath,

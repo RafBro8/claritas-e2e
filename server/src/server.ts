@@ -3,10 +3,16 @@ import { Server } from "socket.io";
 import { createApp } from "./app";
 import { connectDB } from "./config/db";
 import { env } from "./config/env";
+import { reconcileOrphanedRuns } from "./services/runRepository.service";
 
 async function main() {
   await connectDB();
   console.log("Connected to MongoDB");
+
+  const reconciled = await reconcileOrphanedRuns();
+  if (reconciled > 0) {
+    console.log(`Reconciled ${reconciled} run(s) orphaned by a previous process exit`);
+  }
 
   // Socket.io's attach() snapshots whatever request listeners are already on
   // the http.Server, removes them, and re-installs itself as the sole
