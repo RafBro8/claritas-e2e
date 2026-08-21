@@ -13,11 +13,18 @@ services:
     #
     # No --with-deps on the Playwright install: that flag tries to install
     # OS-level system libraries via sudo, which Render's build sandbox
-    # doesn't permit ("su: Authentication failure"). Render's own runtime
-    # image is a reasonably complete Debian base, so the plain browser-binary
-    # download is likely enough on its own — if Chromium still can't launch
-    # at runtime due to a missing shared library, the fix is switching this
-    # service to a Docker runtime using Playwright's own base image instead.
+    # doesn't permit ("su: Authentication failure"). Turned out not to be
+    # needed anyway — Render's runtime image already had what Chromium
+    # needed to actually launch.
+    #
+    # PLAYWRIGHT_BROWSERS_PATH=0 (set below) is what actually matters here:
+    # Render's build and runtime run in separate containers, and only the
+    # project's own directory tree carries over between them. Playwright's
+    # default browser cache (~/.cache/ms-playwright) lives outside that tree,
+    # so without this, the browser downloads fine during build and then is
+    # simply gone by the time the server tries to launch it at runtime
+    # ("Executable doesn't exist at /opt/render/.cache/..."). Set to 0, it
+    # installs into node_modules instead, which does get carried over.
     buildCommand: >
       npm ci --include=dev && npm run build &&
       cd e2e-suite && npm ci --include=dev && npx playwright install chromium
@@ -26,6 +33,11 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # Must be set for BOTH the build step (npx playwright install writes
+      # here) and at runtime (the server needs to find the browser in the
+      # same place it was installed) — see the buildCommand comment above.
+      - key: PLAYWRIGHT_BROWSERS_PATH
+        value: "0"
       # The deployed frontend's origin — drives CORS for both the REST API
       # and the Socket.io handshake. Best-guess value; Vercel may assign a
       # different one if "claritas-e2e" collides globally (as happened with
