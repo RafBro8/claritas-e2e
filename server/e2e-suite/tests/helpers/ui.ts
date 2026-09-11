@@ -17,8 +17,8 @@ export async function loginViaUi(page: Page, email: string, password: string): P
  * `dateIso` also accepts a list of candidate dates, tried in order and
  * falling through to the next one if a date has no open slots. This exists
  * for callers that need "the soonest available slot" rather than a
- * specific day — e.g. today's slots can legitimately run out near the UTC
- * day boundary (they're all in the past by the time the test runs), and
+ * specific day — e.g. today's slots can legitimately run out near
+ * midnight (they're all in the past by the time the test runs), and
  * the actual soonest slot rolls over to tomorrow.
  */
 export async function bookFirstAvailableSlot(

@@ -6,8 +6,8 @@ import { daysFromNow } from "./helpers/dates";
 import { API_URL } from "./helpers/constants";
 
 test("only one of two simultaneous booking attempts for the same slot succeeds", async ({ browser }) => {
-  // Deliberately not "today": if this test happens to run near the UTC day
-  // boundary, "today" can have zero slots left (all already in the past),
+  // Deliberately not "today": if this test happens to run near midnight,
+  // "today" can have zero slots left (all already in the past),
   // which isn't what this test is checking. A day out sidesteps that
   // entirely since none of tomorrow's slots can ever be in the past yet.
   const bookingDate = daysFromNow(1);

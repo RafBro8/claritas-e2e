@@ -37,7 +37,7 @@ test.describe("cancellation policy", () => {
     const tomorrow = daysFromNow(1);
 
     // Working hours span today AND tomorrow: today's slots can legitimately
-    // be exhausted if this test runs near the UTC day boundary (they're all
+    // be exhausted if this test runs near midnight (they're all
     // in the past by then), in which case the soonest slot rolls over to
     // tomorrow. Tomorrow's very first slot is still always within 24h of
     // "now" (at most today's remaining minutes plus a few), so the test's

@@ -30,7 +30,10 @@ test.describe("auth", () => {
 
     step("Logging out");
     await page.getByRole("button", { name: /log out/i }).click();
-    await expect(page.getByRole("link", { name: /log in/i })).toBeVisible();
+    // Scoped to the nav: the footer also links to /login, so an unscoped
+    // match hits two elements. Scoping is also the stronger assertion —
+    // it's the nav specifically that has to reflect the logged-out state.
+    await expect(page.getByRole("navigation").getByRole("link", { name: /log in/i })).toBeVisible();
     await expect(page.getByRole("link", { name: user.name })).not.toBeVisible();
   });
 

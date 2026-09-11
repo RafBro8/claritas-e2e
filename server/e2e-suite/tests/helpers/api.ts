@@ -1,4 +1,5 @@
 import { API_URL } from "./constants";
+import { RUNNER_TIME_ZONE } from "./dates";
 
 export interface RegisteredUser {
   id: string;
@@ -64,6 +65,7 @@ export async function setProviderWorkingHours(
     method: "PUT",
     headers: { "Content-Type": "application/json", Cookie: provider.cookie },
     body: JSON.stringify({
+      timezone: RUNNER_TIME_ZONE,
       bufferMinutes: options.bufferMinutes ?? 15,
       workingHours: days.map((dayOfWeek) => ({
         dayOfWeek,
