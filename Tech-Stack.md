@@ -64,11 +64,13 @@ claritas-e2e/
 | HTTP server | Express 5 | REST API |
 | Real-time | Socket.io 4 | Streaming live run output |
 | Process control | Node's built-in `child_process` | Spawning Playwright |
+| Scheduling | node-cron + cron-parser | Firing scheduled runs; computing the next fire times shown in the UI |
+| Email | Nodemailer (any SMTP provider) | Emailing scheduled-run reports — inert until SMTP settings exist |
 | Database | MongoDB (Mongoose) | Run history — see [Persistence](#persistence-mongodb-not-flat-file) below |
 | Dev loop (server) | `tsx watch` | TS execution with no separate build step |
 | UI library | React 19 | Component model |
 | Build tool | Vite | Dev server, HMR, production bundling |
-| Routing | React Router | Client-side routing (`/`, `/history`) |
+| Routing | React Router | Client-side routing (`/`, `/history`, `/schedules`) |
 | Styling | Tailwind CSS v4 | Utility-first, dark-mode-by-default |
 | Icons | lucide-react | Icon set |
 | Real-time client | socket.io-client | Receives run events |
@@ -99,6 +101,17 @@ The system this project is modeled on used flat JSON files with an atomic write-
 
 **`reconcileOrphanedRuns()`** runs once at server startup as the other half of that fix: any run still marked `running` when the server boots was orphaned by whatever killed the previous process, and gets marked `failed` with an honest "the server restarted while this run was in progress" signal instead of staying stuck forever.
 
+## Scheduling
+
+Schedules live in MongoDB; the in-memory cron tasks are just the live wiring, rebuilt from the database at boot and re-registered whenever a schedule is created, edited, paused or deleted.
+
+- **Cadence is stored as its parts** (type, hour, minute, day) rather than as cron text, so the UI can render it as controls and describe it in plain English. Cron is only how it reaches node-cron; "custom" is the one case where the author writes cron themselves, validated before it's accepted.
+- **Each schedule carries an IANA time zone**, captured from the author's browser. node-cron fires on that zone and cron-parser computes the next occurrences in it, so a 09:00 schedule stays 9am locally across daylight-saving changes even though the server runs on UTC.
+- **"All specs" stores no spec ids.** It's resolved at fire time, so specs added to Provisio later are included without editing the schedule.
+- **One run at a time.** A schedule that fires while another run is in progress is skipped with a logged reason rather than queued: a free-tier container has room for one Playwright browser, and an hourly schedule overlapping itself would pile up.
+- **A scheduled run has no socket to stream to** when it starts, so `socketId` is optional; the run still streams into its own room for anyone who opens the Dashboard mid-run, and always lands in Run History marked `trigger: "scheduled"` with the schedule's name.
+- **Email is a courtesy, never a failure.** Sending happens after the run is recorded and can't throw; the outcome (sent, skipped, failed, with a reason) is stored on the schedule and shown on its row.
+
 ## The failure classifier
 
 A conservative, explainable, **rules-based** system — no ML, and every contributing signal is shown verbatim in the UI's badge tooltip rather than hidden behind a score.
@@ -128,6 +141,9 @@ Two things had to change in Provisio's own suite to make this work standalone:
 | `PROVISIO_E2E_PATH` | Absolute path to the target suite (sibling checkout locally, `server/e2e-suite` in production) |
 | `PROVISIO_LOCAL_HEALTH_URL` / `PROVISIO_LIVE_HEALTH_URL` | Pre-flight health-check targets per environment. Blank means "skip this check" (`ok: null`), not a failure — there's nothing meaningful to check for "Local" in production, since no local Provisio instance is reachable from that container |
 | `HEALTH_TIMEOUT_MS` | Health-probe timeout |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Mail transport for scheduled-run reports. All optional: with any of them missing, schedules still run and each report is recorded as `skipped` with the reason, which the UI shows |
+| `MAIL_FROM` | "From" address on report emails; falls back to `SMTP_USER` |
+| `PUBLIC_URL` | This API's own public URL, used to build the report link inside emails |
 | `PLAYWRIGHT_BROWSERS_PATH=0` | Forces the browser install into `node_modules` instead of the default `~/.cache` — see [Known quirks](#known-quirks--gotchas) |
 
 ## Running locally

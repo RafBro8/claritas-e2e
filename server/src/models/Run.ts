@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import type { Environment, FailureAnalysis, HealthProbe, RunCounts, RunStatus } from "../types";
+import type { Environment, FailureAnalysis, HealthProbe, RunCounts, RunStatus, RunTrigger } from "../types";
 
 export interface RunDocument {
   runId: string;
@@ -7,7 +7,9 @@ export interface RunDocument {
   specCount: number;
   environment: Environment;
   headless: boolean;
-  trigger: "manual";
+  trigger: RunTrigger;
+  scheduleId?: string;
+  scheduleName?: string;
   status: RunStatus;
   startedAt: Date;
   completedAt?: Date;
@@ -54,7 +56,11 @@ const runSchema = new Schema<RunDocument>({
   specCount: { type: Number, required: true },
   environment: { type: String, enum: ["local", "live"], required: true },
   headless: { type: Boolean, required: true },
-  trigger: { type: String, enum: ["manual"], required: true, default: "manual" },
+  trigger: { type: String, enum: ["manual", "scheduled"], required: true, default: "manual" },
+  // Kept on the run itself, so history still says which schedule started it
+  // after that schedule has been edited or deleted.
+  scheduleId: { type: String },
+  scheduleName: { type: String },
   status: {
     type: String,
     enum: ["running", "passed", "failed", "skipped", "cancelled"],

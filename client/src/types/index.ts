@@ -41,7 +41,9 @@ export interface RunRecord {
   specCount: number;
   environment: Environment;
   headless: boolean;
-  trigger: "manual";
+  trigger: RunTrigger;
+  scheduleId?: string;
+  scheduleName?: string;
   status: RunStatus;
   startedAt: string;
   completedAt?: string;
@@ -80,3 +82,52 @@ export interface RunCompletedEvent {
 }
 
 export type UserRole = "Product Owner" | "Business End User" | "Developer";
+
+export type RunTrigger = "manual" | "scheduled";
+
+export type CadenceType = "hourly" | "daily" | "weekdays" | "weekly" | "custom";
+
+/** When a schedule fires. Friendly types are stored as parts; "custom" is raw cron. */
+export interface Cadence {
+  type: CadenceType;
+  minute?: number;
+  hour?: number;
+  dayOfWeek?: number;
+  expression?: string;
+}
+
+export interface SpecSelection {
+  mode: "all" | "specific";
+  specIds: string[];
+}
+
+export interface ScheduleLastRun {
+  runId: string;
+  status: RunStatus;
+  startedAt: string;
+  specCount: number;
+  hasReport: boolean;
+}
+
+export interface ScheduleLastEmail {
+  status: "sent" | "failed" | "skipped";
+  at: string;
+  detail?: string;
+}
+
+export interface ScheduleRecord {
+  id: string;
+  name: string;
+  cadence: Cadence;
+  timeZone: string;
+  environment: Environment;
+  specSelection: SpecSelection;
+  emailTo: string;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+  nextRunAt: string | null;
+  lastRun?: ScheduleLastRun;
+  lastEmail?: ScheduleLastEmail;
+}

@@ -54,11 +54,30 @@ function killProcessTree(child: ChildProcess): void {
   }
 }
 
-export async function startRun(config: StartRunConfig, io: Server): Promise<{ runId: string }> {
+/** What a caller gets told once a run finishes — used to email scheduled reports. */
+export interface RunOutcome {
+  runId: string;
+  status: RunStatus;
+  durationMs: number;
+  counts: RunCounts;
+  hasReport: boolean;
+  specCount: number;
+}
+
+export async function startRun(
+  config: StartRunConfig,
+  io: Server,
+  onComplete?: (outcome: RunOutcome) => void | Promise<void>,
+): Promise<{ runId: string }> {
   const runId = generateRunId();
   const startedAt = new Date();
 
-  io.sockets.sockets.get(config.socketId)?.join(roomFor(runId));
+  // Scheduled runs have no socket to join: nobody is watching when they
+  // start. They still stream into the run's room for anyone who opens the
+  // dashboard mid-run.
+  if (config.socketId) {
+    io.sockets.sockets.get(config.socketId)?.join(roomFor(runId));
+  }
 
   await createRun({
     runId,
@@ -66,6 +85,9 @@ export async function startRun(config: StartRunConfig, io: Server): Promise<{ ru
     environment: config.environment,
     headless: config.headless,
     startedAt,
+    trigger: config.trigger,
+    scheduleId: config.scheduleId,
+    scheduleName: config.scheduleName,
   });
 
   const startedEvent: RunStartedEvent = {
@@ -211,6 +233,21 @@ export async function startRun(config: StartRunConfig, io: Server): Promise<{ ru
       healthProbe: health,
     };
     io.to(roomFor(runId)).emit("run:completed", completedEvent);
+
+    // Deliberately last, and never allowed to throw: emailing a report is a
+    // courtesy, not part of the run.
+    try {
+      await onComplete?.({
+        runId,
+        status,
+        durationMs,
+        counts,
+        hasReport,
+        specCount: config.specIds.length,
+      });
+    } catch (err) {
+      console.error(`Post-run hook failed for ${runId}:`, err);
+    }
   });
 
   return { runId };

@@ -4,6 +4,7 @@ import { createApp } from "./app";
 import { connectDB } from "./config/db";
 import { env } from "./config/env";
 import { reconcileOrphanedRuns } from "./services/runRepository.service";
+import { startScheduler } from "./services/scheduler.service";
 
 async function main() {
   await connectDB();
@@ -35,6 +36,9 @@ async function main() {
       console.log(`Socket disconnected: ${socket.id}`);
     });
   });
+
+  const scheduleCount = await startScheduler(io);
+  console.log(`Scheduler started with ${scheduleCount} enabled schedule(s)`);
 
   httpServer.listen(env.port, () => {
     console.log(`Claritas E2E API listening on port ${env.port}`);

@@ -1,5 +1,5 @@
 import { Run, type RunDocument } from "../models/Run";
-import type { RunRecord } from "../types";
+import type { RunRecord, RunTrigger } from "../types";
 
 function toRunRecord(doc: RunDocument): RunRecord {
   return {
@@ -9,6 +9,8 @@ function toRunRecord(doc: RunDocument): RunRecord {
     environment: doc.environment,
     headless: doc.headless,
     trigger: doc.trigger,
+    scheduleId: doc.scheduleId,
+    scheduleName: doc.scheduleName,
     status: doc.status,
     startedAt: doc.startedAt.toISOString(),
     completedAt: doc.completedAt?.toISOString(),
@@ -27,6 +29,9 @@ export async function createRun(params: {
   environment: RunDocument["environment"];
   headless: boolean;
   startedAt: Date;
+  trigger?: RunTrigger;
+  scheduleId?: string;
+  scheduleName?: string;
 }): Promise<void> {
   await Run.create({
     runId: params.runId,
@@ -34,7 +39,9 @@ export async function createRun(params: {
     specCount: params.specIds.length,
     environment: params.environment,
     headless: params.headless,
-    trigger: "manual",
+    trigger: params.trigger ?? "manual",
+    scheduleId: params.scheduleId,
+    scheduleName: params.scheduleName,
     status: "running",
     startedAt: params.startedAt,
     hasReport: false,

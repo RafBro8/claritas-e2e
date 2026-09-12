@@ -9,6 +9,7 @@ import { healthRouter } from "./routes/health.routes";
 import { specsRouter } from "./routes/specs.routes";
 import { createRunsRouter } from "./routes/runs.routes";
 import { historyRouter } from "./routes/history.routes";
+import { schedulesRouter } from "./routes/schedules.routes";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler";
 
 export function createApp(io: Server) {
@@ -25,6 +26,7 @@ export function createApp(io: Server) {
   app.use("/api/specs", specsRouter);
   app.use("/api/runs", createRunsRouter(io));
   app.use("/api/history", historyRouter);
+  app.use("/api/schedules", schedulesRouter);
   app.use("/api/reports", express.static(REPORTS_DIR));
 
   app.use(notFoundHandler);

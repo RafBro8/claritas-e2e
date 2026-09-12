@@ -1,9 +1,10 @@
 import { Filter } from "lucide-react";
-import type { Environment, RunStatus } from "../../types";
+import type { Environment, RunStatus, RunTrigger } from "../../types";
 
 export type StatusFilter = "all" | RunStatus;
 export type EnvironmentFilter = "all" | Environment;
 export type TimeFilter = "all" | "today" | "7d" | "30d";
+export type TriggerFilter = "all" | RunTrigger;
 
 interface Props {
   status: StatusFilter;
@@ -12,12 +13,23 @@ interface Props {
   onEnvironmentChange: (value: EnvironmentFilter) => void;
   time: TimeFilter;
   onTimeChange: (value: TimeFilter) => void;
+  trigger: TriggerFilter;
+  onTriggerChange: (value: TriggerFilter) => void;
 }
 
 const selectClass =
   "rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none";
 
-export function HistoryFilters({ status, onStatusChange, environment, onEnvironmentChange, time, onTimeChange }: Props) {
+export function HistoryFilters({
+  status,
+  onStatusChange,
+  environment,
+  onEnvironmentChange,
+  time,
+  onTimeChange,
+  trigger,
+  onTriggerChange,
+}: Props) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Filter className="h-4 w-4 text-slate-500" aria-hidden="true" />
@@ -44,6 +56,17 @@ export function HistoryFilters({ status, onStatusChange, environment, onEnvironm
         <option value="all">All environments</option>
         <option value="local">Local</option>
         <option value="live">Live</option>
+      </select>
+
+      <select
+        value={trigger}
+        onChange={(e) => onTriggerChange(e.target.value as TriggerFilter)}
+        className={selectClass}
+        aria-label="Filter by trigger"
+      >
+        <option value="all">All triggers</option>
+        <option value="manual">Manual</option>
+        <option value="scheduled">Scheduled</option>
       </select>
 
       <select

@@ -8,6 +8,8 @@ export interface Spec {
 
 export type Environment = "local" | "live";
 
+export type RunTrigger = "manual" | "scheduled";
+
 export type RunStatus = "running" | "passed" | "failed" | "skipped" | "cancelled";
 
 export type FailureCategory = "ui-change" | "environment" | "unknown";
@@ -32,8 +34,17 @@ export interface StartRunConfig {
   specIds: string[];
   environment: Environment;
   headless: boolean;
-  /** The requesting client's Socket.io connection id, so the server can join it to the run's room. */
-  socketId: string;
+  /**
+   * The requesting client's Socket.io connection id, so the server can join
+   * it to the run's room. Absent for scheduled runs, which nobody is
+   * watching when they start — the run still streams to its own room, so a
+   * dashboard that joins later sees the tail of it.
+   */
+  socketId?: string;
+  trigger?: RunTrigger;
+  /** Set for scheduled runs, so history can say which schedule started this. */
+  scheduleId?: string;
+  scheduleName?: string;
 }
 
 export interface RunCounts {
@@ -49,7 +60,9 @@ export interface RunRecord {
   specCount: number;
   environment: Environment;
   headless: boolean;
-  trigger: "manual";
+  trigger: RunTrigger;
+  scheduleId?: string;
+  scheduleName?: string;
   status: RunStatus;
   startedAt: string;
   completedAt?: string;
@@ -85,4 +98,64 @@ export interface RunCompletedEvent {
   hasReport: boolean;
   failureAnalysis?: FailureAnalysis;
   healthProbe?: HealthProbe;
+}
+
+export type CadenceType = "hourly" | "daily" | "weekdays" | "weekly" | "custom";
+
+/**
+ * When a schedule fires. The friendly types are stored as their parts so the
+ * UI can render them as controls; "custom" is a raw cron expression for
+ * anything they don't cover.
+ */
+export interface Cadence {
+  type: CadenceType;
+  /** 0-59. Used by every type except custom. */
+  minute?: number;
+  /** 0-23. Used by daily, weekdays and weekly. */
+  hour?: number;
+  /** 0 (Sunday) - 6 (Saturday). Weekly only. */
+  dayOfWeek?: number;
+  /** Cron expression. Custom only. */
+  expression?: string;
+}
+
+/** What a schedule runs: every spec in the repo, or a fixed list. */
+export interface SpecSelection {
+  mode: "all" | "specific";
+  specIds: string[];
+}
+
+export interface ScheduleLastRun {
+  runId: string;
+  status: RunStatus;
+  startedAt: string;
+  specCount: number;
+  hasReport: boolean;
+}
+
+export interface ScheduleLastEmail {
+  status: "sent" | "failed" | "skipped";
+  at: string;
+  detail?: string;
+}
+
+export interface ScheduleRecord {
+  id: string;
+  name: string;
+  cadence: Cadence;
+  /** IANA zone the cadence is read in, e.g. "America/Chicago". */
+  timeZone: string;
+  environment: Environment;
+  specSelection: SpecSelection;
+  /** Where to email the report. Empty means no email for this schedule. */
+  emailTo: string;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+  /** Plain English, e.g. "Every weekday at 09:00". Derived, never stored. */
+  description: string;
+  /** null while paused — a paused schedule has no next run. */
+  nextRunAt: string | null;
+  lastRun?: ScheduleLastRun;
+  lastEmail?: ScheduleLastEmail;
 }

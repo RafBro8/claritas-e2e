@@ -4,7 +4,13 @@ import { getHistory, type HistoryStats } from "../api/history";
 import { ApiError } from "../api/client";
 import { useToast } from "../context/ToastContext";
 import { StatTiles } from "../components/history/StatTiles";
-import { HistoryFilters, type EnvironmentFilter, type StatusFilter, type TimeFilter } from "../components/history/HistoryFilters";
+import {
+  HistoryFilters,
+  type EnvironmentFilter,
+  type StatusFilter,
+  type TimeFilter,
+  type TriggerFilter,
+} from "../components/history/HistoryFilters";
 import { RunsTable } from "../components/history/RunsTable";
 import type { RunRecord } from "../types";
 
@@ -28,6 +34,7 @@ export function HistoryPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [environmentFilter, setEnvironmentFilter] = useState<EnvironmentFilter>("all");
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("all");
+  const [triggerFilter, setTriggerFilter] = useState<TriggerFilter>("all");
 
   const load = useCallback(async () => {
     setIsLoading(true);
@@ -51,10 +58,11 @@ export function HistoryPage() {
       runs.filter((run) => {
         if (statusFilter !== "all" && run.status !== statusFilter) return false;
         if (environmentFilter !== "all" && run.environment !== environmentFilter) return false;
+        if (triggerFilter !== "all" && run.trigger !== triggerFilter) return false;
         if (!withinTimeFilter(run.startedAt, timeFilter)) return false;
         return true;
       }),
-    [runs, statusFilter, environmentFilter, timeFilter],
+    [runs, statusFilter, environmentFilter, timeFilter, triggerFilter],
   );
 
   return (
@@ -95,6 +103,8 @@ export function HistoryPage() {
             onEnvironmentChange={setEnvironmentFilter}
             time={timeFilter}
             onTimeChange={setTimeFilter}
+            trigger={triggerFilter}
+            onTriggerChange={setTriggerFilter}
           />
 
           <div className="flex items-center gap-1.5 text-sm font-medium text-slate-200">

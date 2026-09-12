@@ -1,3 +1,4 @@
+import { CalendarClock, User } from "lucide-react";
 import { API_ORIGIN } from "../../api/client";
 import { StatusBadge } from "../StatusBadge";
 import { FailureBadge } from "../FailureBadge";
@@ -31,6 +32,7 @@ export function RunsTable({ runs }: Props) {
             <th className="px-4 py-2.5">Status</th>
             <th className="px-4 py-2.5">Specs</th>
             <th className="px-4 py-2.5">Env</th>
+            <th className="px-4 py-2.5">Trigger</th>
             <th className="px-4 py-2.5">Duration</th>
             <th className="px-4 py-2.5">Started</th>
             <th className="px-4 py-2.5">Run ID</th>
@@ -54,6 +56,22 @@ export function RunsTable({ runs }: Props) {
                 {specsLabel(run.specIds)}
               </td>
               <td className="px-4 py-2.5 text-slate-400">{run.environment === "local" ? "Local" : "Live"}</td>
+              <td className="px-4 py-2.5">
+                {run.trigger === "scheduled" ? (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-md bg-blue-950 px-2 py-0.5 text-xs font-medium text-blue-300"
+                    title={run.scheduleName ? `Schedule: ${run.scheduleName}` : undefined}
+                  >
+                    <CalendarClock className="h-3 w-3" aria-hidden="true" />
+                    Scheduled
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-300">
+                    <User className="h-3 w-3" aria-hidden="true" />
+                    Manual
+                  </span>
+                )}
+              </td>
               <td className="px-4 py-2.5 text-slate-400">
                 {run.durationMs !== undefined ? formatDuration(run.durationMs) : "—"}
               </td>

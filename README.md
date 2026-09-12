@@ -34,7 +34,7 @@ Think of it as a **dashboard for testing** — the same idea as a car dashboard:
 
 ## 2. Who is it for?
 
-No prior testing or coding experience is assumed. Everyone — Product Owners, business analysts, and developers alike — sees and uses the same two screens: a **Dashboard** to run tests, and **Run History** to look back at what happened. There's no login and no permission tiers here; the identity menu in the top-right just labels things with your name so the team knows who ran what.
+No prior testing or coding experience is assumed. Everyone — Product Owners, business analysts, and developers alike — sees and uses the same three screens: a **Dashboard** to run tests, **Run History** to look back at what happened, and **Scheduled Runs** to have tests run themselves. There's no login and no permission tiers here; the identity menu in the top-right just labels things with your name so the team knows who ran what.
 
 ## 3. A few words you'll see a lot
 
@@ -81,6 +81,21 @@ A complete, filterable record of every run that's happened.
 - A table lists each run with its status, specs, environment, duration, and start time.
 - Filter by status, environment, or time period.
 - Open any run's report, or reveal the same likely-cause badge you'd see fresh on the Dashboard, at any point later.
+- The **Trigger** column says whether a person started the run or a schedule did, and you can filter on that.
+
+### Scheduled Runs — have the tests run themselves
+
+Nobody has to remember to click Run. A schedule runs the specs you choose, on a timetable you choose, and can email the result.
+
+- **How often:** hourly, daily, every weekday, weekly — or a **custom** cron expression if you want something specific. As you pick, the dialog shows what it means in plain English ("Every weekday at 09:00") and the next three times it will run.
+- **Times are yours.** A schedule remembers the time zone it was created in, so "09:00" stays 9am where you are, and stays correct across daylight-saving changes, even though the server itself runs on UTC.
+- **What to run:** every spec, or a specific few. "All specs" includes any spec added to Provisio later, automatically.
+- **Email the report** to any address (optional — see below).
+- Each schedule can be **paused** and resumed, edited, deleted, or **run immediately** with the play button. Every run it starts appears in Run History, marked *Scheduled*.
+
+**Setting up email.** Report emails only send once the server has mail settings; until then the page says so plainly, and each report is recorded as skipped rather than silently lost. Any SMTP provider works — a Gmail app password or a service like Resend — by setting `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and optionally `MAIL_FROM` and `PUBLIC_URL` (which puts a link to the full report in the email). See `server/.env.example`.
+
+**A note on timing.** The hosted demo's API sleeps after about 15 minutes of inactivity, because it's on a free plan. A schedule can't fire while the server is asleep — it runs the next time the server is awake. On a machine or paid plan that stays up, schedules fire on time.
 
 ## 6. Smart features that help you
 

@@ -1,10 +1,11 @@
 import { NavLink } from "react-router";
-import { FlaskConical, LayoutDashboard, History } from "lucide-react";
+import { FlaskConical, LayoutDashboard, History, CalendarClock } from "lucide-react";
 import { ConnectionStatus } from "../ConnectionStatus";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/history", label: "Run History", icon: History, end: false },
+  { to: "/schedules", label: "Scheduled Runs", icon: CalendarClock, end: false },
 ];
 
 export function Sidebar() {
