@@ -18,6 +18,18 @@ export function AppLayout() {
         <main className="flex-1 px-6 py-6">
           <Outlet />
         </main>
+
+        <footer className="border-t border-slate-800 px-6 py-4 text-xs text-slate-500">
+          Designed &amp; Built by{" "}
+          <a
+            href="https://goodlookingdigital.com"
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-slate-400 underline-offset-2 transition-colors hover:text-slate-200 hover:underline"
+          >
+            Good Looking Digital
+          </a>
+        </footer>
       </div>
 
       <ToastViewport />
