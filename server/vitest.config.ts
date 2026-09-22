@@ -6,8 +6,8 @@ export default defineConfig({
     environment: "node",
     env: {
       NODE_ENV: "test",
-      // MONGODB_URI's value here is never actually connected to — the
-      // in-memory server in setup.ts is what tests really talk to — but
+      // MONGODB_URI's value here is never actually connected to - the
+      // in-memory server in setup.ts is what tests really talk to - but
       // config/env.ts requires the var to be present at all. Same for
       // CLIENT_ORIGIN: only satisfies the required() check, no route test
       // depends on its actual value. Set directly here (rather than relying
@@ -16,20 +16,20 @@ export default defineConfig({
       MONGODB_URI: "mongodb://localhost:27017/unused-in-tests",
       CLIENT_ORIGIN: "http://localhost:5174",
       // Points every test at a small fixture suite instead of a real
-      // Provisio checkout, which won't exist in CI — specDiscovery and
+      // Provisio checkout, which won't exist in CI - specDiscovery and
       // reportArchive read straight from this path.
       PROVISIO_E2E_PATH: path.resolve(__dirname, "src/test/fixtures/e2e-suite"),
     },
     setupFiles: ["./src/test/setup.ts"],
     // Both the unit-test fixture suite and the real bundled suite
-    // (server/e2e-suite, added for the Render deployment) end in .spec.ts —
+    // (server/e2e-suite, added for the Render deployment) end in .spec.ts -
     // which also matches Vitest's own default test-file pattern. Excluded
     // explicitly so Vitest doesn't try to collect and run them as if they
     // were real test files (they use Playwright's test() API, not Vitest's,
     // and aren't meant to ever execute here). This only surfaced as a
     // failure in CI, not locally: e2e-suite/node_modules happened to be
     // installed locally already (from simulating the Render build), so
-    // @playwright/test resolved and masked the missing exclude — CI's
+    // @playwright/test resolved and masked the missing exclude - CI's
     // server job never installs it, so the import failed outright there.
     exclude: [...configDefaults.exclude, "src/test/fixtures/**", "e2e-suite/**"],
     testTimeout: 20000,

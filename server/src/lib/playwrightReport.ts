@@ -29,7 +29,7 @@ export function collectFailedFiles(suites: PlaywrightJsonSuite[] | undefined, fa
 /**
  * Reads and parses a Playwright JSON reporter output file. Returns null for
  * a missing or unparseable file (e.g. the process crashed before any
- * reporter could write one) — callers fall back to exit-code-only status
+ * reporter could write one) - callers fall back to exit-code-only status
  * in that case rather than treating it as an error.
  */
 export async function parseJsonReport(filePath: string): Promise<{ counts: RunCounts; failedFiles: string[] } | null> {

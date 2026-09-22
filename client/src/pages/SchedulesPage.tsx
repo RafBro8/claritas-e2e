@@ -72,7 +72,7 @@ export function SchedulesPage() {
     setBusyId(schedule.id);
     try {
       await runScheduleNow(schedule.id);
-      showToast(`"${schedule.name}" started — watch it on the Dashboard`, "success");
+      showToast(`"${schedule.name}" started - watch it on the Dashboard`, "success");
       // The run is now in flight; reload so its "last run" shows as running.
       await load();
     } catch (err) {
@@ -144,7 +144,7 @@ export function SchedulesPage() {
         <div className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-10 text-center">
           <p className="text-sm font-medium text-slate-300">No schedules yet</p>
           <p className="mt-1 text-sm text-slate-500">
-            Create one to run specs automatically — nightly, hourly, or on a cron expression of your own.
+            Create one to run specs automatically - nightly, hourly, or on a cron expression of your own.
           </p>
         </div>
       ) : (

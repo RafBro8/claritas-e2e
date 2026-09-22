@@ -1,5 +1,5 @@
 // TARGET_ENV lets this suite run against either a local dev stack (default)
-// or the live deployed app — set by claritas-e2e when it drives this suite
+// or the live deployed app - set by claritas-e2e when it drives this suite
 // with its "Live" environment selected. Unset/anything else means local.
 const TARGET_ENV = process.env.TARGET_ENV === "live" ? "live" : "local";
 

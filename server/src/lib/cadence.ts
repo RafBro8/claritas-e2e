@@ -15,7 +15,7 @@ function isWholeNumberInRange(value: unknown, min: number, max: number): value i
 /**
  * The friendly cadences are stored as their parts (an hour, a minute, a day)
  * rather than as cron text, so the UI can show them as controls and plain
- * English. Cron is only how they're handed to the scheduler — and the one
+ * English. Cron is only how they're handed to the scheduler - and the one
  * escape hatch, "custom", is cron the author typed themselves.
  */
 export function cadenceToCron(cadence: Cadence): string {

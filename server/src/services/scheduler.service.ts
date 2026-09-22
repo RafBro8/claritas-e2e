@@ -9,14 +9,14 @@ import { startRun, getActiveRuns, type RunOutcome } from "./testRunner.service";
 
 /**
  * One cron task per enabled schedule, keyed by schedule id. Held in memory
- * and rebuilt from the database at startup — the database is the source of
+ * and rebuilt from the database at startup - the database is the source of
  * truth, this map is just the live wiring.
  */
 const tasks = new Map<string, ScheduledTask>();
 
 let ioRef: Server | null = null;
 
-/** Which specs a schedule should run right now — "all" is resolved at fire time, not when it was saved. */
+/** Which specs a schedule should run right now - "all" is resolved at fire time, not when it was saved. */
 async function resolveSpecIds(doc: HydratedSchedule): Promise<string[]> {
   if (doc.specSelection.mode === "specific") return doc.specSelection.specIds;
   const specs = await discoverSpecs();

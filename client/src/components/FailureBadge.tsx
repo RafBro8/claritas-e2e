@@ -32,7 +32,7 @@ const TOOLTIP_WIDTH = 288;
  * open tooltip listing the plain-English signals behind the category and
  * its confidence. The tooltip renders through a portal into document.body
  * at a fixed position computed from the button's own rect, rather than
- * being absolutely positioned inside the badge — this component gets used
+ * being absolutely positioned inside the badge - this component gets used
  * inside the Run History table, which scrolls horizontally via
  * overflow-x-auto, and a non-portaled tooltip gets silently clipped by
  * that ancestor for any row near the bottom of the table (overflow-x:auto
@@ -118,7 +118,7 @@ export function FailureBadge({ analysis }: Props) {
               <p className="text-slate-500">No signals recorded.</p>
             )}
             <p className="mt-2 border-t border-slate-800 pt-2 text-slate-500">
-              Always a suggestion — confirm against the report.
+              Always a suggestion - confirm against the report.
             </p>
           </div>,
           document.body,

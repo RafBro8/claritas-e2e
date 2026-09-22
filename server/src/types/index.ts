@@ -1,5 +1,5 @@
 export interface Spec {
-  /** Filename without extension — what gets passed to `npx playwright test <id>`. */
+  /** Filename without extension - what gets passed to `npx playwright test <id>`. */
   id: string;
   fileName: string;
   /** Human-readable title: the spec's top-level describe() block if it has one, else derived from the filename. */
@@ -16,7 +16,7 @@ export type FailureCategory = "ui-change" | "environment" | "unknown";
 
 export interface FailureAnalysis {
   category: FailureCategory;
-  /** 0-1. Ties or zero-signal runs land at low confidence with category "unknown" — a human should look. */
+  /** 0-1. Ties or zero-signal runs land at low confidence with category "unknown" - a human should look. */
   confidence: number;
   /** Plain-English reasons behind the category, shown verbatim in the UI badge tooltip. */
   signals: string[];
@@ -37,7 +37,7 @@ export interface StartRunConfig {
   /**
    * The requesting client's Socket.io connection id, so the server can join
    * it to the run's room. Absent for scheduled runs, which nobody is
-   * watching when they start — the run still streams to its own room, so a
+   * watching when they start - the run still streams to its own room, so a
    * dashboard that joins later sees the tail of it.
    */
   socketId?: string;
@@ -154,7 +154,7 @@ export interface ScheduleRecord {
   updatedAt: string;
   /** Plain English, e.g. "Every weekday at 09:00". Derived, never stored. */
   description: string;
-  /** null while paused — a paused schedule has no next run. */
+  /** null while paused - a paused schedule has no next run. */
   nextRunAt: string | null;
   lastRun?: ScheduleLastRun;
   lastEmail?: ScheduleLastEmail;

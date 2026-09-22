@@ -19,7 +19,7 @@ test("an admin can cancel any booking on the platform as an override", async ({ 
 
   // Discover a real open slot via the API rather than assuming one, since
   // this test's setup deliberately doesn't go through the booking UI at all
-  // — the booking flow itself is already covered by booking-flow.spec.ts.
+  // - the booking flow itself is already covered by booking-flow.spec.ts.
   const availabilityRes = await fetch(
     `${API_URL}/providers/${provider.id}/availability?serviceId=${service.id}&date=${target.iso}`,
   );
@@ -39,7 +39,7 @@ test("an admin can cancel any booking on the platform as an override", async ({ 
   step("Opening the admin dashboard and finding this test's booking");
   await page.goto("/admin/dashboard");
   // Specs run in parallel against a shared database, so the admin dashboard
-  // can show bookings from other concurrently-running specs too — scope
+  // can show bookings from other concurrently-running specs too - scope
   // everything to this test's own row via its unique provider name.
   const row = page.locator("li").filter({ hasText: providerName });
   await expect(row).toBeVisible();
@@ -50,7 +50,7 @@ test("an admin can cancel any booking on the platform as an override", async ({ 
   await row.getByRole("button", { name: /confirm cancellation/i }).click();
 
   step("Verifying the row now shows Cancelled");
-  // The status badge is styled capitalized via CSS only — the actual DOM
+  // The status badge is styled capitalized via CSS only - the actual DOM
   // text is lowercase ("cancelled"), so this must match case-insensitively.
   await expect(row.getByText(/^cancelled$/i)).toBeVisible();
 });

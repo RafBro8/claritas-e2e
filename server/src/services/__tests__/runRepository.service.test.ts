@@ -117,7 +117,7 @@ describe("runRepository", () => {
       failureAnalysis: undefined,
       healthProbe: undefined,
     });
-    // run_c stays "running" — should count toward total but not passed/failed/cancelled.
+    // run_c stays "running" - should count toward total but not passed/failed/cancelled.
 
     const stats = await getRunStats();
     expect(stats).toEqual({ total: 3, passed: 1, failed: 1, cancelled: 0 });

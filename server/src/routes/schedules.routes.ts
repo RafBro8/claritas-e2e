@@ -95,7 +95,7 @@ schedulesRouter.get("/", async (_req, res, next) => {
 });
 
 /**
- * Previews a cadence before it's saved — the "Every weekday at 09:00, next:
+ * Previews a cadence before it's saved - the "Every weekday at 09:00, next:
  * ..." line in the dialog. Computed here rather than in the browser so the
  * preview comes from the same code that will actually run the schedule.
  */

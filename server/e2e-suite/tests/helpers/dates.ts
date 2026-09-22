@@ -1,6 +1,6 @@
 export interface DateOffset {
   iso: string; // YYYY-MM-DD
-  dayOfWeek: number; // 0 (Sunday) – 6 (Saturday), matches the backend's convention
+  dayOfWeek: number; // 0 (Sunday) - 6 (Saturday), matches the backend's convention
 }
 
 /**
@@ -10,7 +10,7 @@ export interface DateOffset {
  */
 export const RUNNER_TIME_ZONE = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-/** A day on the local calendar, `days` from today — the same calendar the app's date picker uses. */
+/** A day on the local calendar, `days` from today - the same calendar the app's date picker uses. */
 export function daysFromNow(days: number): DateOffset {
   const date = new Date();
   date.setDate(date.getDate() + days);

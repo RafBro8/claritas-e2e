@@ -9,7 +9,7 @@ import { REPORTS_DIR } from "../config/paths";
  * Returns whether an archived report now exists for this run.
  *
  * sourceDir/reportsDir default to the real, env-derived locations but can
- * be overridden — lets tests exercise the missing-source case against a
+ * be overridden - lets tests exercise the missing-source case against a
  * throwaway directory instead of mutating the shared fixture suite.
  */
 export async function archiveReport(

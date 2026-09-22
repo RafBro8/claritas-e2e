@@ -70,7 +70,7 @@ export async function listRecentRuns(limit = 50): Promise<RunRecord[]> {
 
 /**
  * Any run still marked "running" at startup was orphaned by the previous
- * process dying mid-run (crash, redeploy, OOM kill) — the in-memory active-
+ * process dying mid-run (crash, redeploy, OOM kill) - the in-memory active-
  * run registry that would normally track and complete it doesn't survive a
  * restart, so without this it stays "running" in history forever. Marks
  * every such run "failed" instead, which is honest: it did not, in fact,

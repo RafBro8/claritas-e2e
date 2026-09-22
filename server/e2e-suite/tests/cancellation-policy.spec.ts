@@ -26,7 +26,7 @@ test.describe("cancellation policy", () => {
     await page.getByRole("button", { name: /confirm cancellation/i }).click();
 
     step("Verifying it's cancelled without a late-cancellation flag");
-    // The status badge is styled capitalized via CSS only — the actual DOM
+    // The status badge is styled capitalized via CSS only - the actual DOM
     // text is lowercase ("cancelled"), so this must match case-insensitively.
     await expect(page.getByText(/^cancelled$/i)).toBeVisible();
     await expect(page.getByText(/inside the 24h window/i)).not.toBeVisible();
@@ -59,7 +59,7 @@ test.describe("cancellation policy", () => {
     await page.getByRole("button", { name: /confirm cancellation/i }).click();
 
     step("Verifying it's flagged as a late cancellation");
-    // The status badge is styled capitalized via CSS only — the actual DOM
+    // The status badge is styled capitalized via CSS only - the actual DOM
     // text is lowercase ("cancelled"), so this must match case-insensitively.
     await expect(page.getByText(/^cancelled$/i)).toBeVisible();
     await expect(page.getByText(/inside the 24h window/i)).toBeVisible();

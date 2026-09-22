@@ -3,8 +3,8 @@ import { describeCadence, nextRun } from "../lib/cadence";
 import type { ScheduleLastEmail, ScheduleLastRun, ScheduleRecord } from "../types";
 
 /**
- * Adds the two derived fields the UI needs — the plain-English description
- * and the next fire time — which are computed rather than stored so they
+ * Adds the two derived fields the UI needs - the plain-English description
+ * and the next fire time - which are computed rather than stored so they
  * can't drift out of date with the cadence itself.
  */
 export function toScheduleRecord(doc: HydratedSchedule): ScheduleRecord {

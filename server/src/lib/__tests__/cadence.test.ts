@@ -51,7 +51,7 @@ describe("nextRuns", () => {
     expect(winter.toISOString()).toBe("2026-03-04T15:00:00.000Z");
 
     // The same 09:00 in July is 14:00 UTC, because Chicago is on daylight
-    // time by then — the wall-clock time the author picked doesn't drift.
+    // time by then - the wall-clock time the author picked doesn't drift.
     const [summer] = nextRuns({ type: "daily", minute: 0, hour: 9 }, "America/Chicago", 1, new Date("2026-07-01T12:00:00.000Z"));
     expect(summer.toISOString()).toBe("2026-07-01T14:00:00.000Z");
 
@@ -63,7 +63,7 @@ describe("nextRuns", () => {
   it("returns consecutive occurrences, skipping the weekend for weekdays", () => {
     const runs = nextRuns({ type: "weekdays", minute: 0, hour: 9 }, "UTC", 4, new Date("2026-03-06T12:00:00.000Z"));
     expect(runs.map((d) => d.toISOString())).toEqual([
-      "2026-03-09T09:00:00.000Z", // Monday — Friday's 09:00 has already passed
+      "2026-03-09T09:00:00.000Z", // Monday - Friday's 09:00 has already passed
       "2026-03-10T09:00:00.000Z",
       "2026-03-11T09:00:00.000Z",
       "2026-03-12T09:00:00.000Z",

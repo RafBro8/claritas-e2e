@@ -1,7 +1,7 @@
 {
   "name": "provisio-e2e",
   "version": "1.0.0",
-  "description": "Playwright end-to-end specs for Provisio — run against the real frontend, backend, and MongoDB, not mocks.",
+  "description": "Playwright end-to-end specs for Provisio - run against the real frontend, backend, and MongoDB, not mocks.",
   "private": true,
   "scripts": {
     "test": "playwright test",

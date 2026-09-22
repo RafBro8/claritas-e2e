@@ -8,7 +8,7 @@ interface FailureRule {
   label: string;
 }
 
-// A conservative, explainable, rules-based classifier — no ML. Every
+// A conservative, explainable, rules-based classifier - no ML. Every
 // contributing rule is surfaced in `signals[]` so a human can see exactly
 // why a category was chosen, rather than trusting a black box.
 const RULES: FailureRule[] = [
@@ -18,7 +18,7 @@ const RULES: FailureRule[] = [
     pattern: /ECONNREFUSED|ECONNRESET|EAI_AGAIN|ENOTFOUND/i,
     category: "environment",
     weight: 3,
-    label: "Connection refused/reset — the server may have been unreachable",
+    label: "Connection refused/reset - the server may have been unreachable",
   },
   { pattern: /certificate|SSL|TLS/i, category: "environment", weight: 2, label: "SSL/TLS certificate error" },
   {
@@ -102,15 +102,15 @@ export function classifyFailure(params: ClassifyFailureParams): FailureAnalysis 
   if (params.specCount > 1) {
     if (params.failedSpecCount === params.specCount) {
       scores.environment += 2;
-      signals.push("Every selected spec failed together — points at the environment rather than one spec");
+      signals.push("Every selected spec failed together - points at the environment rather than one spec");
     } else if (params.failedSpecCount === 1) {
       scores["ui-change"] += 1;
-      signals.push("Only one spec failed while its siblings passed — points at that spec needing an update");
+      signals.push("Only one spec failed while its siblings passed - points at that spec needing an update");
     }
   }
 
   if (params.counts.flaky > 0) {
-    signals.push(`${params.counts.flaky} test(s) passed on retry (flaky) — treat this result with caution`);
+    signals.push(`${params.counts.flaky} test(s) passed on retry (flaky) - treat this result with caution`);
     return { category: "unknown", confidence: 0.3, signals };
   }
 
@@ -124,7 +124,7 @@ export function classifyFailure(params: ClassifyFailureParams): FailureAnalysis 
     return {
       category: "unknown",
       confidence: 0,
-      signals: signals.length ? signals : ["No clear signal in the output — worth a human look"],
+      signals: signals.length ? signals : ["No clear signal in the output - worth a human look"],
     };
   }
   if (scores["ui-change"] === scores.environment) {

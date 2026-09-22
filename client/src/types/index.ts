@@ -1,5 +1,5 @@
 // Deliberately duplicated from server/src/types/index.ts rather than shared
-// via a package — the server is CommonJS, the client is bundled by Vite,
+// via a package - the server is CommonJS, the client is bundled by Vite,
 // and a shared package would add build coupling this project doesn't need.
 // Keep the two in sync by hand when either shape changes.
 

@@ -6,7 +6,7 @@ import type { ScheduleInput } from "../../../api/schedules";
 import type { ScheduleRecord, Spec } from "../../../types";
 
 // The preview comes from the server, so the dialog's own behaviour is what's
-// under test here, not cron maths — that's covered in the server's cadence tests.
+// under test here, not cron maths - that's covered in the server's cadence tests.
 vi.mock("../../../api/schedules", async () => {
   const actual = await vi.importActual<typeof import("../../../api/schedules")>("../../../api/schedules");
   return {

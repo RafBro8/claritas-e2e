@@ -33,7 +33,7 @@ function extractSessionCookie(res: Response): string {
 
 /**
  * Registers a user directly against the API. Used for test *setup* (getting
- * accounts into existence quickly) — the actual register/login UI flow is
+ * accounts into existence quickly) - the actual register/login UI flow is
  * exercised for real in auth.spec.ts, not bypassed everywhere.
  */
 export async function registerViaApi(

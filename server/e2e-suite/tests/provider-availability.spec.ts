@@ -45,7 +45,7 @@ test("a provider can configure hours and services through the dashboard, and the
   const slotButtons = page.locator("main button[aria-pressed]");
   await slotButtons.first().waitFor();
   // A 2-hour window (13:00-15:00) with a 60-minute service should produce
-  // exactly two slots — a real, timezone-agnostic proof the configured
+  // exactly two slots - a real, timezone-agnostic proof the configured
   // hours took effect, rather than eyeballing displayed clock times (which
   // render in the browser's local timezone, not fixed UTC labels).
   await expect(slotButtons).toHaveCount(2);

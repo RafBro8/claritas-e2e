@@ -165,7 +165,7 @@ describe("useRunStream", () => {
     act(() => fakeSocket.trigger("run:started", startedEvent()));
     unmount();
 
-    // Should not throw, and should have no effect on anything observable —
+    // Should not throw, and should have no effect on anything observable -
     // mainly confirms socket.off actually ran during cleanup.
     expect(() => fakeSocket.trigger("run:output", outputEvent())).not.toThrow();
     expect(result.current.output).toEqual([]);

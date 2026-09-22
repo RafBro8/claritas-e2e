@@ -45,7 +45,7 @@ describe("checkEnvironmentHealth", () => {
   });
 
   it("returns ok: false with an error message when the target is unreachable", async () => {
-    // Nothing listens on this port — a real connection failure, not a mock.
+    // Nothing listens on this port - a real connection failure, not a mock.
     const result = await checkEnvironmentHealth("http://127.0.0.1:1");
     expect(result.ok).toBe(false);
     expect(result.error).toBeTruthy();

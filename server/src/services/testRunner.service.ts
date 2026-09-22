@@ -38,7 +38,7 @@ function roomFor(runId: string): string {
 }
 
 // Killing a `shell: true` child only kills the shell wrapper, not the
-// Playwright/browser processes it launched underneath — the process tree
+// Playwright/browser processes it launched underneath - the process tree
 // needs to go, not just the immediate child. Windows and POSIX need
 // different mechanisms for that.
 function killProcessTree(child: ChildProcess): void {
@@ -54,7 +54,7 @@ function killProcessTree(child: ChildProcess): void {
   }
 }
 
-/** What a caller gets told once a run finishes — used to email scheduled reports. */
+/** What a caller gets told once a run finishes - used to email scheduled reports. */
 export interface RunOutcome {
   runId: string;
   status: RunStatus;
@@ -100,7 +100,7 @@ export async function startRun(
   };
   io.to(roomFor(runId)).emit("run:started", startedEvent);
 
-  // Runs concurrently with the actual test run, not before it — awaited
+  // Runs concurrently with the actual test run, not before it - awaited
   // only once the run finishes, so it never adds to the run's duration.
   const healthPromise = checkEnvironmentHealth(healthUrlFor(config.environment));
 
@@ -123,7 +123,7 @@ export async function startRun(
   // Forced to 1 regardless of the bundled suite's own config (which
   // defaults to 4 workers when CI isn't set, and Render doesn't set it):
   // multiple concurrent Chromium instances comfortably exceed a free-tier
-  // Render instance's 512MB RAM, which OOM-kills the whole Node process —
+  // Render instance's 512MB RAM, which OOM-kills the whole Node process -
   // not just the test run, taking down the in-memory active-run registry
   // with it and permanently orphaning that run's DB record in "running".
   // One worker keeps peak memory to a single Chromium instance at a time.
@@ -191,7 +191,7 @@ export async function startRun(
     if (cancelled) status = "cancelled";
     else if (counts.failed > 0) status = "failed";
     // A nonzero exit with zero tests recorded anywhere means the process
-    // died before any test could run — e.g. the local webServer never came
+    // died before any test could run - e.g. the local webServer never came
     // up. The JSON reporter's counts are all zero in that case too, which
     // would otherwise silently read as "passed".
     else if (exitCode !== 0 && noTestsRan) status = "failed";

@@ -13,7 +13,7 @@ export interface ScheduleInput {
 
 export interface SchedulesResponse {
   schedules: ScheduleRecord[];
-  /** False until SMTP settings exist on the server — the UI says so rather than promising email. */
+  /** False until SMTP settings exist on the server - the UI says so rather than promising email. */
   emailConfigured: boolean;
 }
 

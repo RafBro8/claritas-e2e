@@ -42,7 +42,7 @@ describe("buildChildEnv", () => {
 
   it("lets an override reintroduce a normally-stripped key", () => {
     // Not exercised by testRunner today, but confirms overrides are applied
-    // after stripping, not before — so a deliberate override always wins.
+    // after stripping, not before - so a deliberate override always wins.
     const result = buildChildEnv({ PORT: "9999" }, sourceEnv);
     expect(result.PORT).toBe("9999");
   });

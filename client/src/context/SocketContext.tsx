@@ -10,7 +10,7 @@ interface SocketContextValue {
 
 const SocketContext = createContext<SocketContextValue | undefined>(undefined);
 
-// Created once at module scope, not inside the component — every consumer
+// Created once at module scope, not inside the component - every consumer
 // shares the exact same connection rather than each mount opening a new one.
 const socket = io(SOCKET_URL, { autoConnect: true });
 

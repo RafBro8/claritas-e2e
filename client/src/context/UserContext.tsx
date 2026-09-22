@@ -26,7 +26,7 @@ function getInitialIdentity(): Identity {
 
 interface UserContextValue {
   identity: Identity;
-  /** Not a login — just labels anything the user creates with a name/role so the team knows who to talk to. */
+  /** Not a login - just labels anything the user creates with a name/role so the team knows who to talk to. */
   setIdentity: (identity: Identity) => void;
 }
 

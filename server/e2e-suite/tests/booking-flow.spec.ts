@@ -54,7 +54,7 @@ test("a customer can browse, book an appointment, and see it in My Bookings", as
   const bookingRow = page.locator("li").filter({ hasText: service.name });
   await expect(bookingRow).toBeVisible();
   await expect(bookingRow).toContainText(providerName);
-  // The status badge is styled capitalized via CSS only — the actual DOM
+  // The status badge is styled capitalized via CSS only - the actual DOM
   // text is lowercase ("booked"), so this must match case-insensitively.
   await expect(bookingRow.getByText(/^booked$/i)).toBeVisible();
 });

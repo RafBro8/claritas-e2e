@@ -7,7 +7,7 @@ describe("generateRunId", () => {
   });
 
   it("produces different ids on successive calls", () => {
-    // Just two calls, not a large batch — the random suffix has a small
+    // Just two calls, not a large batch - the random suffix has a small
     // enough space (4 hex chars) that a big batch run within the same
     // millisecond would have a real, if small, chance of a genuine
     // collision, which would make this a flaky test rather than a broken

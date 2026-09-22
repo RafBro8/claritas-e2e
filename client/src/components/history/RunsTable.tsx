@@ -10,7 +10,7 @@ interface Props {
 }
 
 function specsLabel(specIds: string[]): string {
-  if (specIds.length === 0) return "—";
+  if (specIds.length === 0) return "-";
   if (specIds.length === 1) return specIds[0];
   return `${specIds[0]} +${specIds.length - 1}`;
 }
@@ -73,7 +73,7 @@ export function RunsTable({ runs }: Props) {
                 )}
               </td>
               <td className="px-4 py-2.5 text-slate-400">
-                {run.durationMs !== undefined ? formatDuration(run.durationMs) : "—"}
+                {run.durationMs !== undefined ? formatDuration(run.durationMs) : "-"}
               </td>
               <td className="px-4 py-2.5 text-slate-400">{formatRelativeOrDate(run.startedAt)}</td>
               <td className="px-4 py-2.5 font-mono text-xs text-slate-600">{run.runId}</td>
@@ -88,7 +88,7 @@ export function RunsTable({ runs }: Props) {
                     View report
                   </a>
                 ) : (
-                  <span className="text-slate-700">—</span>
+                  <span className="text-slate-700">-</span>
                 )}
               </td>
             </tr>

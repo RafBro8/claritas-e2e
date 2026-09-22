@@ -8,14 +8,14 @@ export default defineConfig({
   fullyParallel: true,
   // Each spec drives a real headless Chromium instance. Left unbounded,
   // Playwright defaults to one worker per CPU core, which caused genuine
-  // resource-contention timeouts here (not flaky tests — the servers
+  // resource-contention timeouts here (not flaky tests - the servers
   // couldn't keep up with 9 concurrent browsers). Capped for a reliable
   // default; a beefier machine can override with `--workers=N`.
   workers: process.env.CI ? 2 : 4,
   forbidOnly: !!process.env.CI,
   // One retry everywhere, not just CI: a webServer that has *just* reported
   // healthy can still drop the very first wave of concurrent requests
-  // before it's fully warmed up (a real, observed transient — a genuine
+  // before it's fully warmed up (a real, observed transient - a genuine
   // startup-timing artifact, not flaky test logic). One retry absorbs that
   // without masking an actual regression, which would fail consistently.
   retries: process.env.CI ? 2 : 1,
@@ -30,13 +30,13 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  // Deliberately production builds, not `npm run dev` — running specs
+  // Deliberately production builds, not `npm run dev` - running specs
   // against Vite/tsx's on-demand dev-mode compilation under real concurrent
   // load caused genuine resource-contention timeouts (not flaky tests; the
   // servers just couldn't keep up). Production builds are also what Phase 17
   // actually deploys, so this is closer to what's really being shipped.
   //
-  // Only started for the local target — TARGET_ENV=live points FRONTEND_URL/
+  // Only started for the local target - TARGET_ENV=live points FRONTEND_URL/
   // BACKEND_URL at the real deployed Vercel/Render URLs instead, so there's
   // nothing local to spin up.
   webServer:

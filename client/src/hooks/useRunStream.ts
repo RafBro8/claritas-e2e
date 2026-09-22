@@ -17,7 +17,7 @@ interface UseRunStreamResult {
 
 /**
  * Listens for this run's Socket.io events. Listeners are registered once on
- * mount — not when a run starts — so a `run:started` that arrives in the
+ * mount - not when a run starts - so a `run:started` that arrives in the
  * instant between the POST /api/runs/start response and attaching a listener
  * can never be missed. Which run is "ours" is tracked via a ref (not state)
  * so the output/completed handlers always see the current run id rather

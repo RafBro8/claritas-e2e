@@ -34,7 +34,7 @@ jobs:
       # No .env setup needed here, unlike Provisio's server: vitest.config.ts
       # sets every required env var (MONGODB_URI, CLIENT_ORIGIN,
       # PROVISIO_E2E_PATH) directly, and the target suite tests run against
-      # is a small fixture checked into this repo — there's no real Provisio
+      # is a small fixture checked into this repo - there's no real Provisio
       # checkout to depend on in CI.
       - name: Run tests
         working-directory: server

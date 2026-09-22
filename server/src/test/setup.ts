@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 // Tests run against a throwaway in-memory Mongo instance, never the local
-// docker-compose dev database — so the suite works even if Docker isn't
+// docker-compose dev database - so the suite works even if Docker isn't
 // running, and never leaves test data behind.
 let mongod: MongoMemoryServer;
 

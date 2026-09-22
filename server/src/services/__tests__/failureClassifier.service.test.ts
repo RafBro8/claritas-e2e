@@ -18,7 +18,7 @@ describe("classifyFailure", () => {
 
     expect(result.category).toBe("environment");
     expect(result.confidence).toBe(0.6);
-    expect(result.signals).toEqual(["Connection refused/reset — the server may have been unreachable"]);
+    expect(result.signals).toEqual(["Connection refused/reset - the server may have been unreachable"]);
   });
 
   it("classifies a missing-locator error as ui-change with 60% confidence", () => {
@@ -39,7 +39,7 @@ describe("classifyFailure", () => {
     // This exact combination was produced by a real run: Provisio's local
     // MongoDB was stopped, its server crashed on boot, and the pre-flight
     // health probe (against the now-dead server) independently reported
-    // unhealthy too — two separate signals agreeing.
+    // unhealthy too - two separate signals agreeing.
     const result = classifyFailure({
       output: "MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017",
       specCount: 1,
@@ -51,7 +51,7 @@ describe("classifyFailure", () => {
     expect(result.category).toBe("environment");
     expect(result.confidence).toBe(0.75);
     expect(result.signals).toEqual([
-      "Connection refused/reset — the server may have been unreachable",
+      "Connection refused/reset - the server may have been unreachable",
       "The environment was unreachable or unhealthy before this run even started",
     ]);
   });
@@ -68,7 +68,7 @@ describe("classifyFailure", () => {
     expect(result.category).toBe("environment");
     expect(result.confidence).toBe(0.5);
     expect(result.signals).toEqual([
-      "Every selected spec failed together — points at the environment rather than one spec",
+      "Every selected spec failed together - points at the environment rather than one spec",
     ]);
   });
 
@@ -84,7 +84,7 @@ describe("classifyFailure", () => {
     expect(result.category).toBe("ui-change");
     expect(result.confidence).toBe(0.33);
     expect(result.signals).toEqual([
-      "Only one spec failed while its siblings passed — points at that spec needing an update",
+      "Only one spec failed while its siblings passed - points at that spec needing an update",
     ]);
   });
 
@@ -112,11 +112,11 @@ describe("classifyFailure", () => {
 
     expect(result.category).toBe("unknown");
     expect(result.confidence).toBe(0.3);
-    expect(result.signals).toEqual(["2 test(s) passed on retry (flaky) — treat this result with caution"]);
+    expect(result.signals).toEqual(["2 test(s) passed on retry (flaky) - treat this result with caution"]);
   });
 
   it("does not consult the health probe when the run was flaky", () => {
-    // The flaky check returns before the health.ok === false branch runs —
+    // The flaky check returns before the health.ok === false branch runs -
     // confirm the environment-down signal is NOT added in that case.
     const result = classifyFailure({
       output: "irrelevant",
@@ -154,12 +154,12 @@ describe("classifyFailure", () => {
 
     expect(result.category).toBe("unknown");
     expect(result.confidence).toBe(0);
-    expect(result.signals).toEqual(["No clear signal in the output — worth a human look"]);
+    expect(result.signals).toEqual(["No clear signal in the output - worth a human look"]);
   });
 
   it("returns unknown at 20% confidence on a tied score between categories", () => {
     // "401 Unauthorized" (environment, weight 1) vs. the toHaveText
-    // assertion pattern (ui-change, weight 1) — an even split.
+    // assertion pattern (ui-change, weight 1) - an even split.
     const result = classifyFailure({
       output: "Error: 401 Unauthorized\nexpect(locator).toHaveText('Welcome')",
       specCount: 1,
@@ -183,7 +183,7 @@ describe("classifyFailure", () => {
     });
 
     expect(result.category).toBe("environment");
-    expect(result.signals).toContain("Connection refused/reset — the server may have been unreachable");
+    expect(result.signals).toContain("Connection refused/reset - the server may have been unreachable");
   });
 
   it("recognizes a webServer startup timeout as an environment issue", () => {

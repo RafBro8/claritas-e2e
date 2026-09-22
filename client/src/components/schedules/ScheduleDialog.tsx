@@ -325,7 +325,7 @@ export function ScheduleDialog({ schedule, specs, emailConfigured, onSave, onClo
 
             {draft.specSelection.mode === "all" ? (
               <p className="text-xs text-slate-500">
-                Runs every spec in the suite ({specs.length}) — specs added later are included automatically.
+                Runs every spec in the suite ({specs.length}) - specs added later are included automatically.
               </p>
             ) : (
               <div className="flex flex-col gap-1.5 rounded-lg border border-slate-800 bg-slate-950 p-3">

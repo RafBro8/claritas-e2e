@@ -12,7 +12,7 @@ test.describe("auth", () => {
     await page.getByLabel(/name/i).fill("Riley Customer");
     await page.getByLabel(/email/i).fill(email);
     await page.getByLabel(/password/i).fill("supersecret1");
-    // "Customer" is already selected by default — leave it.
+    // "Customer" is already selected by default - leave it.
     await page.getByRole("button", { name: /create account/i }).click();
 
     step("Verifying the nav shows the new account as logged in");
@@ -31,7 +31,7 @@ test.describe("auth", () => {
     step("Logging out");
     await page.getByRole("button", { name: /log out/i }).click();
     // Scoped to the nav: the footer also links to /login, so an unscoped
-    // match hits two elements. Scoping is also the stronger assertion —
+    // match hits two elements. Scoping is also the stronger assertion -
     // it's the nav specifically that has to reflect the logged-out state.
     await expect(page.getByRole("navigation").getByRole("link", { name: /log in/i })).toBeVisible();
     await expect(page.getByRole("link", { name: user.name })).not.toBeVisible();

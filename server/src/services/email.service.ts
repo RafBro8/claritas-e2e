@@ -17,8 +17,8 @@ export interface RunReportEmail {
 /**
  * Email is optional. Until SMTP settings are configured the app behaves
  * exactly as it did before: schedules run, and each report is recorded as
- * "skipped" with the reason, which the UI shows. Any SMTP provider works —
- * a Gmail app password, Resend, Mailgun — so the choice can be made later
+ * "skipped" with the reason, which the UI shows. Any SMTP provider works -
+ * a Gmail app password, Resend, Mailgun - so the choice can be made later
  * without touching this code.
  */
 export function isEmailConfigured(): boolean {

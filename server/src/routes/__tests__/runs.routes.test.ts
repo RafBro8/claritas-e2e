@@ -3,7 +3,7 @@ import request from "supertest";
 import { Server } from "socket.io";
 
 // testRunner.service's startRun spawns a real `npx playwright test` child
-// process — not something a fast, hermetic unit test should trigger. These
+// process - not something a fast, hermetic unit test should trigger. These
 // route tests cover validation and delegation only ("routes are thin: they
 // validate input and call a service"); the run pipeline itself is covered
 // by its own unit tests (failureClassifier, envHealth, specDiscovery,

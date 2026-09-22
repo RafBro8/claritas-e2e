@@ -30,7 +30,7 @@ describe("IdentityMenu", () => {
     expect(screen.getByText("Product Owner")).toBeInTheDocument();
   });
 
-  it("opens the panel, edits the name and role, and saves — updating the trigger and persisting", async () => {
+  it("opens the panel, edits the name and role, and saves - updating the trigger and persisting", async () => {
     const user = userEvent.setup();
     renderMenu();
 
@@ -70,7 +70,7 @@ describe("IdentityMenu", () => {
     const trigger = screen.getByRole("button", { name: /set your name/i });
     await user.click(trigger);
     await user.type(screen.getByLabelText("Name"), "Not saved");
-    // The trigger's own accessible name is still "Set your name" here —
+    // The trigger's own accessible name is still "Set your name" here -
     // only handleSave commits the draft, so closing this way (without
     // saving) must discard it.
     await user.click(trigger);

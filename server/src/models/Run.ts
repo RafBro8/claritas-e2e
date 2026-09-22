@@ -76,7 +76,7 @@ const runSchema = new Schema<RunDocument>({
   hasReport: { type: Boolean, required: true, default: false },
 });
 
-// Run History reads newest-first almost exclusively — an index makes that a
+// Run History reads newest-first almost exclusively - an index makes that a
 // sorted index scan instead of a full collection sort as the history grows.
 runSchema.index({ startedAt: -1 });
 

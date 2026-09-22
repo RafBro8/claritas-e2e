@@ -4,7 +4,7 @@ export type Theme = "light" | "dark";
 
 const STORAGE_KEY = "claritas-theme";
 
-// Unlike Provisio, this doesn't fall back to the OS preference — dark is
+// Unlike Provisio, this doesn't fall back to the OS preference - dark is
 // the deliberate default for this app, only overridden once someone
 // explicitly picks light.
 function getInitialTheme(): Theme {

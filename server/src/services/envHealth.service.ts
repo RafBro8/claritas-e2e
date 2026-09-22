@@ -9,10 +9,10 @@ export function healthUrlFor(environment: Environment): string {
  * Pre-flight probe of a target environment's health endpoint, run
  * concurrently with a test run starting. A false/unreachable result before
  * the run even began is a strong signal that any failures are environment
- * issues, not the app under test — see failureClassifier.service.ts.
+ * issues, not the app under test - see failureClassifier.service.ts.
  *
  * Takes the URL directly rather than an Environment + looking it up
- * internally, so it's a pure function of its input — testable with any URL
+ * internally, so it's a pure function of its input - testable with any URL
  * (blank, unreachable, a real local test server) without needing to mock
  * the config module.
  */

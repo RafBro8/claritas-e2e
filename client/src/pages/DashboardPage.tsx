@@ -46,7 +46,7 @@ export function DashboardPage() {
     if (lastResult.status === "passed") showToast("Run passed", "success");
     else if (lastResult.status === "failed") showToast("Run failed", "error");
     else if (lastResult.status === "cancelled") showToast("Run cancelled", "info");
-    else if (lastResult.status === "skipped") showToast("Run skipped — no matching tests ran", "info");
+    else if (lastResult.status === "skipped") showToast("Run skipped - no matching tests ran", "info");
   }, [lastResult, showToast]);
 
   function toggleSpec(id: string): void {
