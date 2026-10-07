@@ -1,7 +1,6 @@
 import { Outlet } from "react-router";
 import { Sidebar } from "./Sidebar";
 import { IdentityMenu } from "./IdentityMenu";
-import { ThemeToggle } from "../ThemeToggle";
 import { ToastViewport } from "../ToastViewport";
 
 export function AppLayout() {
@@ -16,7 +15,6 @@ export function AppLayout() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center justify-end gap-3 border-b border-slate-800 px-6 py-3">
           <IdentityMenu />
-          <ThemeToggle />
         </header>
 
         <main className="flex-1 px-6 py-6">
