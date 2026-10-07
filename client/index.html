@@ -2,24 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!--
-      Applies the saved theme before anything paints, so there's no flash of
-      the wrong theme while React mounts and ThemeContext runs. Unlike
-      Provisio, this defaults to dark when nothing is stored yet (not the OS
-      preference) - Claritas is an internal dev-tool style app where dark is
-      the deliberate default, with a manual override. Kept in sync with
-      client/src/context/ThemeContext.tsx's logic.
-    -->
-    <script>
-      (function () {
-        var stored = localStorage.getItem("claritas-theme");
-        if (stored !== "light") {
-          document.documentElement.classList.add("dark");
-        }
-      })();
-    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Claritas E2E is a demonstration of a testing tool, not a product anyone
+      can buy. It is here to be linked from goodlookingdigital.com, not to be
+      found in search by somebody looking for software to evaluate.
+
+      Crawling stays allowed on purpose. A crawler has to fetch the page to
+      read the tag below, so disallowing in robots.txt would hide it and the
+      address could still be indexed from a link elsewhere, with no
+      description and no way to correct it.
+    -->
+    <meta name="robots" content="noindex, nofollow" />
     <title>Claritas E2E</title>
   </head>
   <body>

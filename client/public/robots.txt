@@ -1,0 +1,10 @@
+# A demonstration of a testing tool, not a product anyone can buy.
+#
+# Crawling is allowed on purpose. Every page carries a noindex tag, and a
+# crawler has to be able to fetch the page to read it. Disallowing here would
+# hide the noindex, and the address could still end up indexed from a link
+# somewhere else, listed with no description and no way to correct it.
+#
+# There is deliberately no sitemap: nothing here is meant to be found in search.
+User-agent: *
+Allow: /
