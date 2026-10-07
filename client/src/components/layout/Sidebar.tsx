@@ -10,7 +10,7 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-slate-800 bg-slate-900">
+    <aside className="flex w-full shrink-0 flex-col border-b border-slate-800 bg-slate-900 md:w-56 md:border-r md:border-b-0">
       <div className="flex items-center gap-2 px-4 py-5">
         <FlaskConical className="h-6 w-6 text-blue-500" aria-hidden="true" />
         <span className="text-lg font-bold text-white">
@@ -18,14 +18,16 @@ export function Sidebar() {
         </span>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3">
+      {/* A row on a phone, a column from md. Three links fit across 375px, so
+          a scrollable row beats a menu you have to open to reveal them. */}
+      <nav className="flex flex-row gap-1 overflow-x-auto px-3 pb-3 md:flex-1 md:flex-col md:pb-0">
         {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${
+              `flex shrink-0 items-center gap-3 rounded-lg px-3 py-2 text-sm whitespace-nowrap ${
                 isActive ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800 hover:text-white"
               }`
             }
