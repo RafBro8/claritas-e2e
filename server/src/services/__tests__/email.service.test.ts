@@ -77,7 +77,7 @@ describe("sendRunReportEmail", () => {
     const result = await sendRunReportEmail(BASE_REPORT);
 
     expect(result.status).toBe("skipped");
-    expect(result.detail).toMatch(/isn't configured/i);
+    expect(result.detail).toMatch(/not emailed in the demo/i);
   });
 
   it("reports a send failure instead of throwing, so a bad mail server can't fail the run", async () => {

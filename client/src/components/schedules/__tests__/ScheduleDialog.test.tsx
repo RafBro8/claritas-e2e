@@ -92,13 +92,13 @@ describe("ScheduleDialog", () => {
     expect(props.onSave.mock.calls[0][0].specSelection).toEqual({ mode: "specific", specIds: ["booking-flow"] });
   });
 
-  it("warns that an address won't be used while email is unconfigured", async () => {
+  it("says the address will not be emailed while email is unconfigured", async () => {
     const user = userEvent.setup();
     render(<ScheduleDialog {...baseProps()} emailConfigured={false} />);
 
     await user.type(screen.getByPlaceholderText("name@example.com"), "team@example.com");
 
-    expect(screen.getByText(/Email isn't set up on the server yet/)).toBeInTheDocument();
+    expect(screen.getByText(/not emailed in the demo/i)).toBeInTheDocument();
   });
 
   it("loads an existing schedule into the form for editing", async () => {

@@ -84,7 +84,10 @@ export async function sendRunReportEmail(report: RunReportEmail): Promise<Schedu
   const at = new Date().toISOString();
 
   if (!report.to) return { status: "skipped", at, detail: "No email address on this schedule" };
-  if (!isEmailConfigured()) return { status: "skipped", at, detail: "Email isn't configured on the server yet" };
+  // Surfaced verbatim on the schedule row, so it has to read the same way as
+  // the banner above it: a deliberate boundary of the demo, not a half-built
+  // feature somebody forgot to finish.
+  if (!isEmailConfigured()) return { status: "skipped", at, detail: "Reports are not emailed in the demo" };
 
   const { subject, text } = buildRunReportEmail(report);
 

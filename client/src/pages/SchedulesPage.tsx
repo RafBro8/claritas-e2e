@@ -133,8 +133,7 @@ export function SchedulesPage() {
 
       {!emailConfigured && (
         <p className="rounded-lg border border-amber-900 bg-amber-950/40 px-4 py-3 text-sm text-amber-300">
-          Email isn't set up on the server yet, so report emails won't send. Schedules still run on time, and every run
-          appears in Run History.
+          This is a demo, so report emails are not sent. Schedules run on time and every run appears in Run History.
         </p>
       )}
 

@@ -356,7 +356,7 @@ export function ScheduleDialog({ schedule, specs, emailConfigured, onSave, onClo
             />
             {!emailConfigured && draft.emailTo.trim() !== "" && (
               <span className="text-xs text-amber-400">
-                Email isn't set up on the server yet, so reports won't send. The address is saved for when it is.
+                Reports are not emailed in the demo. The address is saved with the schedule.
               </span>
             )}
           </label>
